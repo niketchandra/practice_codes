@@ -1,0 +1,38 @@
+---
+- hosts: 127.0.0.1
+  vars_prompt:
+    - name: "t1"
+      prompt: "enter tenant name"
+      private: no
+
+    - name: "username"
+      prompt: "Enter your Github repository name"
+      private: no
+
+    - name: "p1"
+      prompt: "enter project name"
+      private: no
+
+  tasks:
+    - set_fact:
+            application_list: "{{ p1.split(',') }}"
+    - debug:
+        msg: "{{ p1.split(',') }}"
+    - name: add line in file
+      blockinfile:
+        marker: '#{mark} #'
+        create: yes
+        insertbefore: BOF
+        dest: /root/automation/test.txt #create temp file
+        block: |
+           - name: {{ t1 }}
+    - name: add data begineng of the file
+      lineinfile:
+        path: /root/automation/test.txt
+        insertbefore: "#END #\n"
+        line: "{{ username }}/{{ item }}"
+      with_items: "{{p1.split(',')}}"
+    - name: final updation
+      #create: yes
+      #      path: /root/automation/final.txt
+      shell: "cat /root/automation/test.txt >> /root/automation/final.txt | rm /root/automation/test.txt"

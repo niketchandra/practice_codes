@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes	  
+  tasks:
+    - name: nginx Container
+      docker:
+         name: niket-nginx
+         image: nginx
+         state: present
+         expose: 8080

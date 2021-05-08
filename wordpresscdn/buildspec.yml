@@ -1,0 +1,40 @@
+image: Docker:17.09.0
+version: 0.2
+pipelines:
+  default:
+    - step:
+        caches:
+          - composer
+        script:
+          - apt-get update && apt-get install -y unzip
+          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          - composer install
+          - vendor/bin/phpunit
+  phases:
+  install:
+    commands:
+      - wget https://github.com/niketchandra/wordpresscdn/blob/master/wordpress.zip
+      - ll
+    finally:
+      - echo "Wordpress file is availbale"
+  pre_build:
+    commands:
+      - apt-get install unzip
+      - cd
+      - apt-get unzip wordpress.zip
+    finally:
+      - ll
+      - echo "wordpress unzip properly"
+  build:
+    commands:
+      - apt-get mv wordpress projectx
+      - ll
+    finally:
+      - echo "project rename to projectx"
+  post_build:
+    commands:
+      - apt-get mv projectx /var/wwww/html
+      - cd /var/wwww/html
+    finally:
+      - ll
+      - echo "project Deployed properly"

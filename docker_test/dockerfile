@@ -1,0 +1,8 @@
+FROM ubuntu:18.04
+RUN useradd -ms /bin/bash niket
+COPY  automate.sh /
+RUN cd / | ls
+#RUN chmod 777 automate.sh
+RUN cd /home/niket | bash automate.sh
+EXPOSE 80/tcp
+RUN apt-get install -y apache2

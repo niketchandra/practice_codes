@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: yes	  
+  tasks:
+    - name: install docker
+      apt: name=docker.io state=latest
+    - name: start docker
+      service:
+         name: docker
+         state: started    
+    - name: nginx Container
+      docker_container:
+         name: niket-nginx
+         image: nginx
+         state: present
+         expose: 8080
+#---
+#- hosts: all
+#  become: yes	  
+#  tasks:
+#    - name: Clone repo
+#      shell:
+#        "cd /home/adminuser | git clone https://github.com/niketchandra/basic.git | cd /home/adminuser/basic | pwd "
+#      register: datecmd
+#      delegate_to: 20.184.16.69
+#    - debug: msg="{{datecmd.stdout}}"
+#    - name: Clone a private repository into repo
+#      git:
+#         repo: git@ssh.dev.azure.com:v3/ibstestniket/Automation/Automation
+#         version: master
+#         dest: /home/adminuser/repo/
+#         accept_hostkey: yes
+#      become: no
+#      delegate_to: 20.184.16.69
+#    - name: run azure.json
+#      shell:
+#        "cd /home/adminuser/repo | packer build azure.json "
+#      register: datecmd
+#      delegate_to: 20.184.16.69
+#    - debug: msg="{{datecmd.stdout}}"
